@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>洋銘的插畫網站</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft JhengHei', '微軟正黑體', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #FFF8E1;
+            color: #5D4037;
+            line-height: 1.6;
+            background-image: linear-gradient(rgba(255, 248, 225, 0.9), rgba(255, 248, 225, 0.9)), 
+                              url('https://images.unsplash.com/photo-1550684376-efcbd6e3f031?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+        
+        header {
+            background-color: #FFECB3;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            color: #5D4037;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #8D6E63;
+            margin-bottom: 1rem;
+        }
+        
+        .marquee-container {
+            background: linear-gradient(90deg, #FFD54F, #FFB300);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        marquee {
+            font-size: 1.2rem;
+            color: #5D4037;
+            font-weight: bold;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .tool-panel {
+            flex: 1;
+            min-width: 250px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .canvas-container {
+            flex: 2;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #5D4037;
+            border-bottom: 2px solid #FFD54F;
+            padding-bottom: 5px;
+        }
+        
+        .tool-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .tool-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #8D6E63;
+        }
+        
+        .color-wheel-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 15px;
+        }
+        
+        #color-wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            cursor: crosshair;
+        }
+        
+        #selected-color {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            border: 2px solid #5D4037;
+            background-color: #000000;
+        }
+        
+        .basic-colors {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        .basic-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #ddd;
+            transition: transform 0.2s;
+        }
+        
+        .basic-color:hover {
+            transform: scale(1.1);
+        }
+        
+        .brush-size {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        
+        .tool-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            background-color: #FFD54F;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #5D4037;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .tool-btn:hover {
+            background-color: #FFB300;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .tool-btn.active {
+            background-color: #FFB300;
+        }
+        
+        .download-btn {
+            background-color: #4CAF50;
+            color: white;
+            margin-top: 20px;
+        }
+        
+        .download-btn:hover {
+            background-color: #388E3C;
+        }
+        
+        canvas {
+            background-color: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 5px;
+            cursor: crosshair;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .multimedia-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #5D4037;
+            text-align: center;
+            border-bottom: 2px solid #FFD54F;
+            padding-bottom: 10px;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .content-card {
+            background-color: #FFECB3;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .content-card h3 {
+            color: #5D4037;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #FFD54F;
+            padding-bottom: 5px;
+        }
+        
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        
+        .styled-table th, .styled-table td {
+            border: 1px solid #FFD54F;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .styled-table th {
+            background-color: #FFD54F;
+            color: #5D4037;
+        }
+        
+        .styled-table tr:nth-child(even) {
+            background-color: #FFF8E1;
+        }
+        
+        .styled-text {
+            margin: 15px 0;
+            padding: 10px;
+            border-left: 4px solid #FFD54F;
+            background-color: #FFF8E1;
+        }
+        
+        .quote {
+            font-style: italic;
+            color: #8D6E63;
+            margin: 10px 0;
+            padding: 10px 15px;
+            background-color: #FFF8E1;
+            border-radius: 5px;
+            border-left: 4px solid #8D6E63;
+        }
+        
+        .image-container {
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .image-container img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .media-player {
+            width: 100%;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .link-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .styled-link {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #FFD54F;
+            color: #5D4037;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        .styled-link:hover {
+            background-color: #FFB300;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .html-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #FFD54F, #FFB300);
+            color: #5D4037;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+            margin: 5px;
+        }
+        
+        .html-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+            justify-content: center;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            color: #8D6E63;
+            background-color: #FFECB3;
+            border-top: 2px solid #FFD54F;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 1rem;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #FFD54F;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            color: #5D4037;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .social-icon:hover {
+            background-color: #FFB300;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .copyright {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>洋銘的插畫網站</h1>
+            <p class="subtitle">體驗滑鼠繪畫的抽象世界</p>
+            
+            <div class="marquee-container">
+                <marquee behavior="scroll" direction="left">
+                    🎨 歡迎使用洋銘的插畫網站！在這裡您可以繪圖、欣賞多媒體內容，並...(自行探索)！ 🎵
+                </marquee>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="main-content">
+            <div class="tool-panel">
+                <h2>繪圖工具</h2>
+                
+                <div class="tool-group">
+                    <label class="tool-label">畫筆顏色</label>
+                    <div class="color-wheel-container">
+                        <canvas id="color-wheel" width="200" height="200"></canvas>
+                        <div id="selected-color"></div>
+                    </div>
+                    
+                    <div class="basic-colors">
+                        <div class="basic-color" style="background-color: #000000;" data-color="#000000"></div>
+                        <div class="basic-color" style="background-color: #FFFFFF; border: 2px solid #ccc;" data-color="#FFFFFF"></div>
+                        <div class="basic-color" style="background-color: #FF0000;" data-color="#FF0000"></div>
+                        <div class="basic-color" style="background-color: #00FF00;" data-color="#00FF00"></div>
+                        <div class="basic-color" style="background-color: #0000FF;" data-color="#0000FF"></div>
+                        <div class="basic-color" style="background-color: #FFFF00;" data-color="#FFFF00"></div>
+                        <div class="basic-color" style="background-color: #FF00FF;" data-color="#FF00FF"></div>
+                        <div class="basic-color" style="background-color: #00FFFF;" data-color="#00FFFF"></div>
+                        <div class="basic-color" style="background-color: #FFA500;" data-color="#FFA500"></div>
+                        <div class="basic-color" style="background-color: #FF69B4;" data-color="#FF69B4"></div>
+                        <div class="basic-color" style="background-color: #7CFC00;" data-color="#7CFC00"></div>
+                        <div class="basic-color" style="background-color: #9370DB;" data-color="#9370DB"></div>
+                    </div>
+                </div>
+                
+                <div class="tool-group">
+                    <label class="tool-label">畫筆粗細: <span id="brush-size-value">5</span>px</label>
+                    <input type="range" min="1" max="20" value="5" class="brush-size" id="brush-size">
+                </div>
+                
+                <div class="tool-group">
+                    <button class="tool-btn active" id="brush-btn">畫筆</button>
+                    <button class="tool-btn" id="eraser-btn">橡皮擦</button>
+                    <button class="tool-btn" id="clear-btn">清除畫布</button>
+                </div>
+                
+                <button class="tool-btn download-btn" id="download-btn">下載圖片</button>
+            </div>
+            
+            <div class="canvas-container">
+                <h2>畫布</h2>
+                <canvas id="paint-canvas" width="600" height="400"></canvas>
+            </div>
+        </div>
+        
+        <div class="multimedia-section">
+            <h2 class="section-title">多媒體與網頁設計展示</h2>
+            
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>視力檢查，找缺口</h3>
+                    <h1 style="color: #FF5722;">E</h1>
+                    <h2 style="color: #FF9800;">m</h2>
+                    <h3 style="color: #FFC107;">3</h3>
+                    
+                    <div class="styled-text">
+                        <p>辨色力測試，念出文字的顏色</p>
+                        <p style="color: #E91E63; font-weight: bold;">藍</p>
+                        <p style="color: #2196F3; font-style: italic;">粉紅</p>
+                    </div>
+                    
+                    <blockquote class="quote">
+                        "參考https://github.com/clingoram/draw_it"
+                    </blockquote>
+                </div>
+                
+                <div class="content-card">
+                    <h3>目前功能</h3>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>描述</th>
+                                <th>狀態</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>繪圖功能</td>
+                                <td>基本繪圖工具</td>
+                                <td>✅ 完成</td>
+                            </tr>
+                            <tr>
+                                <td>顏色選擇</td>
+                                <td>色圈與基本顏色</td>
+                                <td>✅ 完成</td>
+                            </tr>
+                            <tr>
+                                <td>多媒體展示</td>
+                                <td>圖片、音頻、影片</td>
+                                <td>✅ 完成</td>
+                            </tr>
+                            <tr>
+                                <td>裝置通用</td>
+                                <td>適配各種設備</td>
+                                <td>✅ 完成</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="content-card">
+                    <h3>圖片展示</h3>
+                    <div class="image-container">
+                        <img src="https://images.unsplash.com/photo-1579546929662-711aa81148cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="彩色背景">
+                        <p>美麗的彩色背景圖片</p>
+                    </div>
+                </div>
+                
+                <div class="content-card">
+                    <h3>音樂播放器</h3>
+                    <p>點擊播放按鈕聆聽背景音樂：</p>
+                    <audio controls class="media-player">
+                        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+                        您的瀏覽器不支持音頻元素。
+                    </audio>
+                </div>
+                
+                <div class="content-card">
+                    <h3>YouTube 影片(少數能顯示的)</h3>
+                    <div class="video-container">
+                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/3JZ_D3ELwOQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="media-player"></iframe>
+                    </div>
+                </div>
+                
+                <div class="content-card">
+                    <h3>按鈕</h3>
+                    <p>有用的網站連結：</p>
+                    <div class="link-container">
+                        <a href="https://www.google.com" class="styled-link" target="_blank">Google</a>
+                        <a href="https://www.youtube.com" class="styled-link" target="_blank">YouTube</a>
+                        <a href="https://github.com" class="styled-link" target="_blank">▯▯?▯Hub</a>
+                    </div>
+                    
+                    <p>就...按鈕</p>
+                    <div class="button-container">
+                        <button class="html-button">分數加一</button>
+                        <button class="html-button" style="background: linear-gradient(135deg, #4CAF50, #388E3C); color: white;">分數減一</button>
+                        <button class="html-button" style="background: linear-gradient(135deg, #2196F3, #1976D2); color: white;">不要按我</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-content">
+            <p>探索更多創意與設計可能性</p>
+            <div class="social-links">
+                <a href="https://www.facebook.com/myusersnamelym/" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.instagram.com/rick_astley_memes/" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.youtube.com/watch?v=6vrj3sr3oTw" class="social-icon"><i class="fab fa-youtube"></i></a>
+            </div>
+            <div class="copyright">
+                &copy; 2025 洋銘的插畫網站
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('paint-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+            let currentColor = '#000000';
+            let brushSize = 5;
+            let currentTool = 'brush';
+            
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+            
+            const brushSizeSlider = document.getElementById('brush-size');
+            const brushSizeValue = document.getElementById('brush-size-value');
+            const brushBtn = document.getElementById('brush-btn');
+            const eraserBtn = document.getElementById('eraser-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const selectedColor = document.getElementById('selected-color');
+            const basicColors = document.querySelectorAll('.basic-color');
+            
+            brushSizeSlider.addEventListener('input', function() {
+                brushSize = this.value;
+                brushSizeValue.textContent = brushSize;
+            });
+            
+            brushBtn.addEventListener('click', function() {
+                currentTool = 'brush';
+                brushBtn.classList.add('active');
+                eraserBtn.classList.remove('active');
+            });
+            
+            eraserBtn.addEventListener('click', function() {
+                currentTool = 'eraser';
+                eraserBtn.classList.add('active');
+                brushBtn.classList.remove('active');
+            });
+            
+            clearBtn.addEventListener('click', function() {
+                if (confirm('確定要清除畫布嗎？')) {
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                }
+            });
+            
+            downloadBtn.addEventListener('click', function() {
+                const dataURL = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.download = '我的繪圖作品.png';
+                link.href = dataURL;
+                link.click();
+            });
+            
+            basicColors.forEach(color => {
+                color.addEventListener('click', function() {
+                    currentColor = this.getAttribute('data-color');
+                    selectedColor.style.backgroundColor = currentColor;
+                });
+            });
+            
+            function startDrawing(e) {
+                isDrawing = true;
+                [lastX, lastY] = getPosition(e);
+            }
+            
+            function draw(e) {
+                if (!isDrawing) return;
+                
+                const [x, y] = getPosition(e);
+                
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(x, y);
+                
+                if (currentTool === 'brush') {
+                    ctx.strokeStyle = currentColor;
+                } else if (currentTool === 'eraser') {
+                    ctx.strokeStyle = 'white';
+                }
+                
+                ctx.lineWidth = brushSize;
+                ctx.stroke();
+                
+                [lastX, lastY] = [x, y];
+            }
+            
+            function stopDrawing() {
+                isDrawing = false;
+            }
+            
+            function getPosition(e) {
+                let x, y;
+                if (e.type.includes('touch')) {
+                    x = e.touches[0].clientX - canvas.getBoundingClientRect().left;
+                    y = e.touches[0].clientY - canvas.getBoundingClientRect().top;
+                } else {
+                    x = e.offsetX;
+                    y = e.offsetY;
+                }
+                return [x, y];
+            }
+            
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+            
+            canvas.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                startDrawing(e);
+            });
+            
+            canvas.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+                draw(e);
+            });
+            
+            canvas.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                stopDrawing();
+            });
+            
+            const colorWheelCanvas = document.getElementById('color-wheel');
+            const colorWheelCtx = colorWheelCanvas.getContext('2d');
+            
+            function drawColorWheel() {
+                const centerX = colorWheelCanvas.width / 2;
+                const centerY = colorWheelCanvas.height / 2;
+                const radius = Math.min(centerX, centerY) - 5;
+                
+                for (let angle = 0; angle < 360; angle += 1) {
+                    const startAngle = (angle - 2) * Math.PI / 180;
+                    const endAngle = angle * Math.PI / 180;
+                    
+                    colorWheelCtx.beginPath();
+                    colorWheelCtx.moveTo(centerX, centerY);
+                    colorWheelCtx.arc(centerX, centerY, radius, startAngle, endAngle, false);
+                    colorWheelCtx.closePath();
+                    
+                    const gradient = colorWheelCtx.createLinearGradient(
+                        centerX, centerY, 
+                        centerX + Math.cos(startAngle) * radius, 
+                        centerY + Math.sin(startAngle) * radius
+                    );
+                    
+                    const hue = angle;
+                    gradient.addColorStop(0, 'white');
+                    gradient.addColorStop(0.2, `hsl(${hue}, 100%, 50%)`);
+                    gradient.addColorStop(1, `hsl(${hue}, 100%, 30%)`);
+                    
+                    colorWheelCtx.fillStyle = gradient;
+                    colorWheelCtx.fill();
+                }
+                
+                colorWheelCtx.beginPath();
+                colorWheelCtx.arc(centerX, centerY, radius * 0.6, 0, 2 * Math.PI);
+                colorWheelCtx.fillStyle = '#FFF8E1';
+                colorWheelCtx.fill();
+            }
+            
+            drawColorWheel();
+            
+            colorWheelCanvas.addEventListener('click', function(e) {
+                const rect = colorWheelCanvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = colorWheelCanvas.width / 2;
+                const centerY = colorWheelCanvas.height / 2;
+                const radius = Math.min(centerX, centerY) - 5;
+                
+                const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+                
+                if (distance > radius * 0.6 && distance <= radius) {
+                    const imageData = colorWheelCtx.getImageData(x, y, 1, 1).data;
+                    currentColor = `rgb(${imageData[0]}, ${imageData[1]}, ${imageData[2]})`;
+                    selectedColor.style.backgroundColor = currentColor;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
